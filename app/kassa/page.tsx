@@ -62,6 +62,13 @@ export default function KassaPage() {
 
     const handleConfirmAction = async (method: string) => {
         if (!selectedOrder) return
+
+        // Qarzga sotish uchun mijoz tanlangan bo'lishi majburiy
+        if (method === 'debt' && !selectedOrder.customer_name) {
+            alert("Qarzga sotish uchun mijoz tanlangan bo'lishi majburiy!")
+            return
+        }
+
         setConfirming(true)
         try {
             const response = await api.post(`/sales/${selectedOrder.id}/confirm-payment/`, { payment_method: method })
@@ -78,8 +85,10 @@ export default function KassaPage() {
 
             setSelectedOrder(null)
             fetchPendingOrders()
-        } catch (e) {
-            alert("Xatolik yuz berdi")
+        } catch (e: any) {
+            console.error("Payment confirmation error:", e)
+            const errorMsg = e.response?.data?.error || e.response?.data?.detail || "Xatolik yuz berdi"
+            alert(errorMsg)
         } finally {
             setConfirming(false)
         }

@@ -122,8 +122,10 @@ export default function POSPage() {
           }, 500)
         }
       }
-    } catch (e) {
-      alert("Xatolik yuz berdi. Iltimos qayta urinib ko'ring.")
+    } catch (e: any) {
+      console.error("Checkout error:", e)
+      const errorMsg = e.response?.data?.error || e.response?.data?.detail || "Xatolik yuz berdi. Iltimos qayta urinib ko'ring."
+      alert(errorMsg)
     }
   }
 
