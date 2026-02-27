@@ -91,6 +91,12 @@ export default function POSPage() {
   const handleCheckout = async () => {
     if (cartItems.length === 0) return
 
+    // Qarzga sotish uchun mijoz tanlash majburiy
+    if (paymentMethod === 'debt' && !selectedCustomerId) {
+      alert("Qarzga sotish uchun mijozni tanlash majburiy!")
+      return
+    }
+
     try {
       const order = await createOrder(products, user?.id || "default", selectedCustomerId || undefined)
       if (order) {
