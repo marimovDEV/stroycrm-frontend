@@ -1,0 +1,97 @@
+import type { Product, User } from "./types"
+
+// Demo mahsulotlari
+export const MOCK_PRODUCTS: Product[] = [
+  {
+    id: "1",
+    barcode: "4600000000001",
+    name: "Sement 50kg",
+    category: "Sement",
+    unit: "dona",
+    buyPrice: 45000,
+    sellPrice: 65000,
+    minStock: 10,
+    currentStock: 45,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "2",
+    barcode: "4600000000002",
+    name: "Qum (kub metr)",
+    category: "Agregat",
+    unit: "metr",
+    buyPrice: 180000,
+    sellPrice: 250000,
+    minStock: 5,
+    currentStock: 12,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "3",
+    barcode: "4600000000003",
+    name: "Xanot (10x10 metr)",
+    category: "Plitkalar",
+    unit: "dona",
+    buyPrice: 35000,
+    sellPrice: 55000,
+    minStock: 8,
+    currentStock: 28,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "4",
+    barcode: "4600000000004",
+    name: "Po'lyetilen plenka",
+    category: "Izolyatsiya",
+    unit: "roll",
+    buyPrice: 25000,
+    sellPrice: 40000,
+    minStock: 15,
+    currentStock: 50,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "5",
+    barcode: "4600000000005",
+    name: "Temir armatura (12 mm)",
+    category: "Metall",
+    unit: "metr",
+    buyPrice: 35000,
+    sellPrice: 50000,
+    minStock: 20,
+    currentStock: 2,
+    createdAt: new Date().toISOString(),
+  },
+]
+
+// Demo xodimlar
+export const MOCK_USERS: User[] = [
+  {
+    id: "1",
+    pin: "1234",
+    name: "Admin",
+    role: "admin",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "2",
+    pin: "5678",
+    name: "Kassir 1",
+    role: "kassir",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "3",
+    pin: "9999",
+    name: "Omborchi",
+    role: "omborchi",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "4",
+    pin: "0000",
+    name: "Super Admin",
+    role: "super-admin",
+    createdAt: new Date().toISOString(),
+  },
+]
