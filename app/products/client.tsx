@@ -79,6 +79,25 @@ export function ProductsClient() {
   const [customCategoryEdit, setCustomCategoryEdit] = useState("")
   const [isCustomUnitEdit, setIsCustomUnitEdit] = useState(false)
   const [customUnitEdit, setCustomUnitEdit] = useState("")
+
+  // Standalone Category State
+  const [isCatOpen, setIsCatOpen] = useState(false)
+  const [standaloneCatName, setStandaloneCatName] = useState("")
+
+  const handleAddStandaloneCategory = async () => {
+    if (!standaloneCatName.trim()) return
+    try {
+      await addCategory(standaloneCatName)
+      setStandaloneCatName("")
+      setIsCatOpen(false)
+      // Success feedback
+    } catch (e: any) {
+      console.error(" standalone category error:", e)
+      const errorMsg = e.response?.data?.name?.[0] || e.response?.data?.detail || "Kategoriya qo'shishda xatolik"
+      alert(errorMsg)
+    }
+  }
+
   // Add Product Submit Handler
   const handleAddProduct = async () => {
     try {
@@ -166,101 +185,131 @@ export function ProductsClient() {
             <h1 className="text-lg md:text-2xl font-bold">Mahsulotlar</h1>
             <p className="text-slate-300 text-[10px] md:text-sm hidden md:block">Mahsulot kataloginizi boshqaring</p>
           </div>
-          <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs h-9 px-3">
-                + Yangi
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Yangi Mahsulot Qo'shish</DialogTitle>
-                <DialogDescription>Mahsulot ma'lumotlarini kiriting</DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">Nomi</Label>
-                  <Input id="name" value={newProduct.name} onChange={e => setNewProduct({ ...newProduct, name: e.target.value })} className="col-span-3" />
+          <div className="flex gap-2">
+            <Dialog open={isCatOpen} onOpenChange={setIsCatOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" variant="outline" className="border-amber-500 text-amber-500 hover:bg-amber-50 font-bold text-xs h-9 px-3">
+                  + Yangi Kategoriya
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Yangi Kategoriya Qo'shish</DialogTitle>
+                  <DialogDescription>Kategoriya nomini kiriting</DialogDescription>
+                </DialogHeader>
+                <div className="py-4">
+                  <Label htmlFor="catName">Nom</Label>
+                  <Input
+                    id="catName"
+                    placeholder="Masalan: Kraska, Sement..."
+                    value={standaloneCatName}
+                    onChange={e => setStandaloneCatName(e.target.value)}
+                    className="mt-2"
+                    onKeyDown={e => e.key === 'Enter' && handleAddStandaloneCategory()}
+                  />
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="category" className="text-right">Kategoriya</Label>
-                  <div className="col-span-3 space-y-2">
-                    <select
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                      value={isCustomCategory ? "CUSTOM" : newProduct.category}
-                      onChange={e => {
-                        if (e.target.value === "CUSTOM") {
-                          setIsCustomCategory(true)
-                        } else {
-                          setIsCustomCategory(false)
-                          setNewProduct({ ...newProduct, category: e.target.value })
-                        }
-                      }}
-                    >
-                      {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
-                      <option value="CUSTOM">+ Yangi qo'shish</option>
-                    </select>
-                    {isCustomCategory && (
-                      <Input
-                        placeholder="Yangi kategoriya nomi"
-                        value={customCategory}
-                        onChange={e => setCustomCategory(e.target.value)}
-                        autoFocus
-                      />
-                    )}
+                <DialogFooter>
+                  <Button onClick={handleAddStandaloneCategory} className="bg-amber-600 hover:bg-amber-700">Saqlash</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs h-9 px-3">
+                  + Yangi Mahsulot
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Yangi Mahsulot Qo'shish</DialogTitle>
+                  <DialogDescription>Mahsulot ma'lumotlarini kiriting</DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">Nomi</Label>
+                    <Input id="name" value={newProduct.name} onChange={e => setNewProduct({ ...newProduct, name: e.target.value })} className="col-span-3" />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="category" className="text-right">Kategoriya</Label>
+                    <div className="col-span-3 space-y-2">
+                      <select
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        value={isCustomCategory ? "CUSTOM" : newProduct.category}
+                        onChange={e => {
+                          if (e.target.value === "CUSTOM") {
+                            setIsCustomCategory(true)
+                          } else {
+                            setIsCustomCategory(false)
+                            setNewProduct({ ...newProduct, category: e.target.value })
+                          }
+                        }}
+                      >
+                        {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+                        <option value="CUSTOM">+ Yangi qo'shish</option>
+                      </select>
+                      {isCustomCategory && (
+                        <Input
+                          placeholder="Yangi kategoriya nomi"
+                          value={customCategory}
+                          onChange={e => setCustomCategory(e.target.value)}
+                          autoFocus
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="sellPrice" className="text-right">Sotish Narxi</Label>
+                    <Input id="sellPrice" type="number" value={newProduct.sellPrice} onChange={e => setNewProduct({ ...newProduct, sellPrice: e.target.value })} className="col-span-3" />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="buyPrice" className="text-right">Olish Narxi</Label>
+                    <Input id="buyPrice" type="number" value={newProduct.buyPrice} onChange={e => setNewProduct({ ...newProduct, buyPrice: e.target.value })} className="col-span-3" />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="unit" className="text-right">Birlik</Label>
+                    <div className="col-span-3 space-y-2">
+                      <select
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        value={isCustomUnit ? "CUSTOM" : newProduct.unit}
+                        onChange={e => {
+                          if (e.target.value === "CUSTOM") {
+                            setIsCustomUnit(true)
+                            setNewProduct({ ...newProduct, unit: "" })
+                          } else {
+                            setIsCustomUnit(false)
+                            setNewProduct({ ...newProduct, unit: e.target.value })
+                          }
+                        }}
+                      >
+                        {defaultUnits.map(u => <option key={u} value={u}>{u}</option>)}
+                        <option value="CUSTOM">+ Yangi qo'shish</option>
+                      </select>
+                      {isCustomUnit && (
+                        <Input
+                          placeholder="Yangi birlik (masalan: kg, m, gisht)"
+                          value={customUnit}
+                          onChange={e => setCustomUnit(e.target.value)}
+                          autoFocus
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="stock" className="text-right">Zaxira</Label>
+                    <Input id="stock" type="number" value={newProduct.currentStock} onChange={e => setNewProduct({ ...newProduct, currentStock: e.target.value })} className="col-span-3" />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="minstock" className="text-right">Min Zaxira</Label>
+                    <Input id="minstock" type="number" value={newProduct.minStock} onChange={e => setNewProduct({ ...newProduct, minStock: e.target.value })} className="col-span-3" />
                   </div>
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="sellPrice" className="text-right">Sotish Narxi</Label>
-                  <Input id="sellPrice" type="number" value={newProduct.sellPrice} onChange={e => setNewProduct({ ...newProduct, sellPrice: e.target.value })} className="col-span-3" />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="buyPrice" className="text-right">Olish Narxi</Label>
-                  <Input id="buyPrice" type="number" value={newProduct.buyPrice} onChange={e => setNewProduct({ ...newProduct, buyPrice: e.target.value })} className="col-span-3" />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="unit" className="text-right">Birlik</Label>
-                  <div className="col-span-3 space-y-2">
-                    <select
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                      value={isCustomUnit ? "CUSTOM" : newProduct.unit}
-                      onChange={e => {
-                        if (e.target.value === "CUSTOM") {
-                          setIsCustomUnit(true)
-                          setNewProduct({ ...newProduct, unit: "" })
-                        } else {
-                          setIsCustomUnit(false)
-                          setNewProduct({ ...newProduct, unit: e.target.value })
-                        }
-                      }}
-                    >
-                      {defaultUnits.map(u => <option key={u} value={u}>{u}</option>)}
-                      <option value="CUSTOM">+ Yangi qo'shish</option>
-                    </select>
-                    {isCustomUnit && (
-                      <Input
-                        placeholder="Yangi birlik (masalan: kg, m, gisht)"
-                        value={customUnit}
-                        onChange={e => setCustomUnit(e.target.value)}
-                        autoFocus
-                      />
-                    )}
-                  </div>
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="stock" className="text-right">Zaxira</Label>
-                  <Input id="stock" type="number" value={newProduct.currentStock} onChange={e => setNewProduct({ ...newProduct, currentStock: e.target.value })} className="col-span-3" />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="minstock" className="text-right">Min Zaxira</Label>
-                  <Input id="minstock" type="number" value={newProduct.minStock} onChange={e => setNewProduct({ ...newProduct, minStock: e.target.value })} className="col-span-3" />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button onClick={handleAddProduct} type="submit">Saqlash</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+                <DialogFooter>
+                  <Button onClick={handleAddProduct} type="submit">Saqlash</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         <div className="p-3 md:p-6 space-y-3 md:space-y-6 pb-24 md:pb-6">
