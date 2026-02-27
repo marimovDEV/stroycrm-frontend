@@ -49,11 +49,11 @@ export function ProductsClient() {
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [newProduct, setNewProduct] = useState({
     name: "",
-    category: "", // Initialize empty
-    sellPrice: 0,
-    buyPrice: 0,
-    currentStock: 0,
-    minStock: 10,
+    category: "",
+    sellPrice: "" as string | number,
+    buyPrice: "" as string | number,
+    currentStock: "" as string | number,
+    minStock: "10" as string | number,
     unit: "dona"
   })
 
@@ -99,19 +99,20 @@ export function ProductsClient() {
       setNewProduct({
         name: "",
         category: categories[0]?.name || "",
-        sellPrice: 0,
-        buyPrice: 0,
-        currentStock: 0,
-        minStock: 10,
+        sellPrice: "",
+        buyPrice: "",
+        currentStock: "",
+        minStock: "10",
         unit: "dona"
       })
       setIsCustomCategory(false)
       setCustomCategory("")
       setIsCustomUnit(false)
       setCustomUnit("")
-      // Optional: Add success toast
-    } catch (e) {
-      alert("Xatolik yuz berdi!")
+    } catch (e: any) {
+      console.error("Add product error:", e)
+      const errorMsg = e.response?.data?.name?.[0] || e.response?.data?.detail || "Mahsulot qo'shishda xatolik yuz berdi"
+      alert(errorMsg)
     }
   }
 
@@ -149,8 +150,10 @@ export function ProductsClient() {
       setCustomCategoryEdit("")
       setIsCustomUnitEdit(false)
       setCustomUnitEdit("")
-    } catch (e) {
-      alert("Xatolik yuz berdi!")
+    } catch (e: any) {
+      console.error("Edit product error:", e)
+      const errorMsg = e.response?.data?.name?.[0] || e.response?.data?.detail || "O'zgarishlarni saqlashda xatolik yuz berdi"
+      alert(errorMsg)
     }
   }
 
@@ -209,11 +212,11 @@ export function ProductsClient() {
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="sellPrice" className="text-right">Sotish Narxi</Label>
-                  <Input id="sellPrice" type="number" value={newProduct.sellPrice} onChange={e => setNewProduct({ ...newProduct, sellPrice: Number(e.target.value) })} className="col-span-3" />
+                  <Input id="sellPrice" type="number" value={newProduct.sellPrice} onChange={e => setNewProduct({ ...newProduct, sellPrice: e.target.value })} className="col-span-3" />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="buyPrice" className="text-right">Olish Narxi</Label>
-                  <Input id="buyPrice" type="number" value={newProduct.buyPrice} onChange={e => setNewProduct({ ...newProduct, buyPrice: Number(e.target.value) })} className="col-span-3" />
+                  <Input id="buyPrice" type="number" value={newProduct.buyPrice} onChange={e => setNewProduct({ ...newProduct, buyPrice: e.target.value })} className="col-span-3" />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="unit" className="text-right">Birlik</Label>
@@ -224,6 +227,7 @@ export function ProductsClient() {
                       onChange={e => {
                         if (e.target.value === "CUSTOM") {
                           setIsCustomUnit(true)
+                          setNewProduct({ ...newProduct, unit: "" })
                         } else {
                           setIsCustomUnit(false)
                           setNewProduct({ ...newProduct, unit: e.target.value })
@@ -245,11 +249,11 @@ export function ProductsClient() {
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="stock" className="text-right">Zaxira</Label>
-                  <Input id="stock" type="number" value={newProduct.currentStock} onChange={e => setNewProduct({ ...newProduct, currentStock: Number(e.target.value) })} className="col-span-3" />
+                  <Input id="stock" type="number" value={newProduct.currentStock} onChange={e => setNewProduct({ ...newProduct, currentStock: e.target.value })} className="col-span-3" />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="minstock" className="text-right">Min Zaxira</Label>
-                  <Input id="minstock" type="number" value={newProduct.minStock} onChange={e => setNewProduct({ ...newProduct, minStock: Number(e.target.value) })} className="col-span-3" />
+                  <Input id="minstock" type="number" value={newProduct.minStock} onChange={e => setNewProduct({ ...newProduct, minStock: e.target.value })} className="col-span-3" />
                 </div>
               </div>
               <DialogFooter>
@@ -500,7 +504,7 @@ export function ProductsClient() {
                     id="edit-sellPrice"
                     type="number"
                     value={editingProduct.sellPrice}
-                    onChange={e => setEditingProduct({ ...editingProduct, sellPrice: Number(e.target.value) })}
+                    onChange={e => setEditingProduct({ ...editingProduct, sellPrice: e.target.value })}
                     className="col-span-3"
                   />
                 </div>
@@ -510,7 +514,7 @@ export function ProductsClient() {
                     id="edit-buyPrice"
                     type="number"
                     value={editingProduct.buyPrice}
-                    onChange={e => setEditingProduct({ ...editingProduct, buyPrice: Number(e.target.value) })}
+                    onChange={e => setEditingProduct({ ...editingProduct, buyPrice: e.target.value })}
                     className="col-span-3"
                   />
                 </div>
@@ -548,7 +552,7 @@ export function ProductsClient() {
                     id="edit-minstock"
                     type="number"
                     value={editingProduct.minStock}
-                    onChange={e => setEditingProduct({ ...editingProduct, minStock: Number(e.target.value) })}
+                    onChange={e => setEditingProduct({ ...editingProduct, minStock: e.target.value })}
                     className="col-span-3"
                   />
                 </div>
