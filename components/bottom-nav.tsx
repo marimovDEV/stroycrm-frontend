@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ShoppingCart, Warehouse, BarChart3 } from "lucide-react"
+import { ShoppingCart, Warehouse, BarChart3, Package, BookOpen } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/use-auth"
 
@@ -19,15 +19,15 @@ export function BottomNav() {
     const navItems = isSeller
         ? [
             { label: "Savdo", icon: ShoppingCart, href: "/pos", roles: ["seller"] },
-            { label: "Mahsulotlar", icon: Warehouse, href: "/products", roles: ["seller"] },
-            { label: "Qarzlar", icon: BarChart3, href: "/debts", roles: ["seller"] },
+            { label: "Mahsulotlar", icon: Package, href: "/products", roles: ["seller"] },
+            { label: "Qarzlar", icon: BookOpen, href: "/debts", roles: ["seller"] },
         ]
         : [
             { label: "Savdo", icon: ShoppingCart, href: "/pos", roles: ["kassir", "admin", "super-admin"] },
             { label: "Ombor", icon: Warehouse, href: "/inventory", roles: ["kassir", "omborchi", "admin", "super-admin"] },
             {
                 label: user.role === "kassir" ? "Qarzlar" : "Hisobot",
-                icon: BarChart3,
+                icon: user.role === "kassir" ? BookOpen : BarChart3,
                 href: user.role === "kassir" ? "/debts" : "/reports",
                 roles: ["kassir", "admin", "super-admin"],
             },

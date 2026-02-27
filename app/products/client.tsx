@@ -260,23 +260,23 @@ export function ProductsClient() {
         </div>
 
         <div className="p-3 md:p-6 space-y-3 md:space-y-6 pb-24 md:pb-6">
-          {/* Stats - Compact 2x2 grid on mobile */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
-            <div className="bg-white rounded-xl p-3 shadow-sm border border-slate-100">
-              <p className="text-[9px] md:text-sm font-bold text-slate-400 uppercase tracking-wider">Mahsulotlar</p>
-              <p className="text-lg md:text-2xl font-black text-slate-900 mt-0.5">{stats.totalProducts}</p>
+          {/* Stats - Ultra Compact 4-grid on mobile */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
+            <div className="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 flex flex-col justify-center">
+              <p className="text-[8px] md:text-sm font-bold text-slate-400 uppercase tracking-wider leading-none">Mahsulotlar</p>
+              <p className="text-base md:text-2xl font-black text-slate-900 mt-1">{stats.totalProducts}</p>
             </div>
-            <div className="bg-white rounded-xl p-3 shadow-sm border border-slate-100">
-              <p className="text-[9px] md:text-sm font-bold text-slate-400 uppercase tracking-wider">Zaxira qiymati</p>
-              <p className="text-lg md:text-2xl font-black text-slate-900 mt-0.5">{(stats.totalValue / 1000000).toFixed(1)}M</p>
+            <div className="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 flex flex-col justify-center">
+              <p className="text-[8px] md:text-sm font-bold text-slate-400 uppercase tracking-wider leading-none">Zaxira qiymati</p>
+              <p className="text-base md:text-2xl font-black text-slate-900 mt-1">{(stats.totalValue / 1000000).toFixed(1)}M</p>
             </div>
-            <div className="bg-white rounded-xl p-3 shadow-sm border border-slate-100">
-              <p className="text-[9px] md:text-sm font-bold text-slate-400 uppercase tracking-wider">Kam zaxira</p>
-              <p className="text-lg md:text-2xl font-black text-red-600 mt-0.5">{stats.lowStockCount}</p>
+            <div className="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 flex flex-col justify-center">
+              <p className="text-[8px] md:text-sm font-bold text-slate-400 uppercase tracking-wider leading-none">Kam zaxira</p>
+              <p className="text-base md:text-2xl font-black text-red-600 mt-1">{stats.lowStockCount}</p>
             </div>
-            <div className="bg-white rounded-xl p-3 shadow-sm border border-slate-100">
-              <p className="text-[9px] md:text-sm font-bold text-slate-400 uppercase tracking-wider">O'rt. Foyda</p>
-              <p className="text-lg md:text-2xl font-black text-slate-900 mt-0.5">{stats.avgMargin}%</p>
+            <div className="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 flex flex-col justify-center">
+              <p className="text-[8px] md:text-sm font-bold text-slate-400 uppercase tracking-wider leading-none">O'rt. Foyda</p>
+              <p className="text-base md:text-2xl font-black text-slate-900 mt-1">{stats.avgMargin}%</p>
             </div>
           </div>
 
@@ -316,41 +316,48 @@ export function ProductsClient() {
 
           {/* Products List - Cards on mobile, Table on desktop */}
           {/* Mobile Card List */}
-          <div className="md:hidden space-y-2">
+          <div className="md:hidden space-y-1.5">
             {filteredProducts.length === 0 ? (
               <div className="text-center py-8 text-slate-400 text-sm">Mahsulot topilmadi</div>
             ) : (
               filteredProducts.map((product) => (
-                <div key={product.id} className="bg-white rounded-xl p-3 shadow-sm border border-slate-100 flex items-center gap-3">
+                <div key={product.id} className="bg-white rounded-lg p-2.5 shadow-sm border border-slate-100 flex items-center gap-2.5">
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-xs text-slate-900 truncate">{product.name}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[10px] font-bold text-slate-500 bg-slate-100 rounded px-1.5 py-0.5">{product.category}</span>
-                      <span className="text-[10px] text-slate-400">{product.barcode}</span>
+                    <p className="font-bold text-[11px] text-slate-900 truncate leading-tight">{product.name}</p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-[9px] font-bold text-slate-400 bg-slate-50 border border-slate-100 rounded px-1 py-0.2">
+                        {product.category}
+                      </span>
+                      <span className="text-[9px] text-slate-300 font-medium">{product.barcode}</span>
                     </div>
-                    <div className="flex items-center gap-3 mt-1.5">
-                      <span className="text-xs font-black text-slate-900">{product.sellPrice.toLocaleString()} <span className="text-[9px] font-normal text-slate-400">so'm</span></span>
-                      <span className="text-[10px] text-slate-400">Olish: {product.buyPrice.toLocaleString()}</span>
+                    <div className="flex items-center gap-2.5 mt-1">
+                      <span className="text-[11px] font-black text-slate-900">
+                        {product.sellPrice.toLocaleString()}
+                        <span className="text-[8px] font-normal text-slate-400 ml-0.5 uppercase">s</span>
+                      </span>
+                      <span className="text-[9px] text-slate-400 bg-slate-50 px-1 rounded">
+                        Kirim: {product.buyPrice.toLocaleString()}
+                      </span>
                     </div>
                   </div>
-                  <div className="flex flex-col items-center gap-1 shrink-0">
-                    <div className={cn("text-sm font-black", product.currentStock <= product.minStock ? "text-red-600" : "text-slate-700")}>
+                  <div className="flex flex-col items-center justify-center shrink-0 bg-slate-50 rounded-lg px-2 py-1 min-w-[45px]">
+                    <div className={cn("text-[11px] font-black leading-none", product.currentStock <= product.minStock ? "text-red-600" : "text-slate-900")}>
                       {product.currentStock}
                     </div>
-                    <span className="text-[8px] uppercase font-bold text-slate-400">{product.unit}</span>
+                    <span className="text-[7px] uppercase font-black text-slate-400 mt-0.5 tracking-tighter">{product.unit}</span>
                   </div>
                   <div className="flex flex-col gap-1 shrink-0">
                     <button
                       onClick={() => { setEditingProduct(product); setIsEditOpen(true) }}
-                      className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors"
+                      className="p-1.5 rounded-md bg-slate-100 text-slate-600 active:scale-90 transition-transform"
                     >
-                      <Edit2 size={12} className="text-slate-600" />
+                      <Edit2 size={11} />
                     </button>
                     <button
                       onClick={() => handleDelete(product.id)}
-                      className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 transition-colors"
+                      className="p-1.5 rounded-md bg-red-50 text-red-500 active:scale-90 transition-transform"
                     >
-                      <Trash2 size={12} className="text-red-500" />
+                      <Trash2 size={11} />
                     </button>
                   </div>
                 </div>

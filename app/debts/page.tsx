@@ -52,7 +52,7 @@ export default function DebtsPage() {
   }
 
   return (
-    <RoleGate user={user} allowedRoles={["admin", "super-admin", "kassir"]}>
+    <RoleGate user={user} allowedRoles={["admin", "super-admin", "kassir", "seller"]}>
       <main className="flex-1 overflow-auto bg-[#F8FAFC] pb-24 md:pb-12 text-slate-900">
         {/* Premium Header - Sticky & Compact */}
         <div className="bg-slate-900 text-white p-4 md:p-5 sticky top-0 z-30 shadow-xl overflow-hidden">
