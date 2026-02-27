@@ -85,145 +85,18 @@ export default function KassaPage() {
         }
     }
 
-    const handlePrintReceipt = () => {
+    const handlePrintReceipt = async () => {
         const sale = receiptData
-        if (!sale || !iframeRef.current) return
+        if (!sale) return
 
-        const receiptHtml = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <style>
-                    @page { 
-                        size: 80mm auto;
-                        margin: 0;
-                    }
-                    * {
-                        box-sizing: border-box;
-                    }
-                    body { 
-                        font-family: 'Courier New', Courier, monospace; 
-                        width: 76mm; 
-                        margin: 0 auto;
-                        padding: 5mm 2mm;
-                        font-size: 12px; 
-                        line-height: 1.1; 
-                        color: #000;
-                    }
-                    .header { text-align: center; margin-bottom: 10px; }
-                    .header h1 { margin: 0; font-size: 24px; font-weight: 900; letter-spacing: -1px; }
-                    .info { margin-bottom: 8px; font-size: 11px; }
-                    .info p { margin: 2px 0; }
-                    .items-table { width: 100%; border-collapse: collapse; margin-bottom: 5px; }
-                    .items-table th { text-align: left; border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 4px 0; font-size: 11px; }
-                    .items-table td { padding: 4px 0; vertical-align: top; font-size: 11px; }
-                    .col-narx { text-align: right; width: 60px; }
-                    .col-summa { text-align: right; width: 80px; }
-                    .col-soni { text-align: center; width: 40px; }
-                    .total-section { border-top: 1px dashed #000; padding-top: 5px; margin-top: 5px; }
-                    .total-row { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 3px; }
-                    .total-row.main { font-size: 16px; margin-top: 5px; border-top: 1px solid #000; padding-top: 5px; }
-                    .footer { 
-                        margin-top: 15px; 
-                        text-align: center; 
-                        font-size: 11px; 
-                        border-top: 1px dashed #000; 
-                        padding-top: 10px;
-                    }
-                    .footer p { margin: 3px 0; }
-                    .thank-you { font-weight: bold; font-size: 13px; margin-bottom: 5px; }
-                </style>
-            </head>
-            <body>
-                <div class="receipt-container">
-                    <div class="header">
-                        <h1>STROYCRM</h1>
-                        <p style="text-transform: uppercase; font-size: 9px; letter-spacing: 2px; margin-top: 2px;">Qurilish mollari do'koni</p>
-                    </div>
-                    
-                    <div class="info">
-                        <p>SOTUVCHI: <strong>${sale.seller_name || 'Sotuvchi'}</strong></p>
-                        <p>KASSIR: <strong>${user?.name || user?.full_name || 'Kassir'}</strong></p>
-                        <p>MIJOZ: <strong>${sale.customer_name || 'Umumiy mijoz'}</strong></p>
-                        <div style="border-top: 1px dashed #000; margin-top: 5px; padding-top: 5px;">
-                            <p>SANA: ${new Date().toLocaleDateString('uz-UZ')} ${new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })}</p>
-                            <p>CHEK №: <strong>${sale.receipt_id}</strong></p>
-                        </div>
-                    </div>
-
-                    <table class="items-table">
-                        <thead>
-                            <tr>
-                                <th>MAHSULOT</th>
-                                <th class="col-soni">SONI</th>
-                                <th class="col-narx">NARX</th>
-                                <th class="col-summa">SUMMA</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${(sale.items || []).map((item: any) => `
-                                <tr>
-                                    <td style="font-weight: bold; text-transform: uppercase;">${item.product_name}</td>
-                                    <td class="col-soni">${parseFloat(item.quantity)}</td>
-                                    <td class="col-narx">${Number(item.price).toLocaleString()}</td>
-                                    <td class="col-summa">${Number(item.total).toLocaleString()}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-
-                    <div class="total-section">
-                        <div class="total-row" style="font-size: 11px;">
-                            <span>ORADAN:</span>
-                            <span>${Number(sale.subtotal || sale.total_amount + (sale.discount_amount || 0)).toLocaleString()} so'm</span>
-                        </div>
-                        ${sale.discount_amount > 0 ? `
-                        <div class="total-row" style="font-size: 11px; color: #000;">
-                            <span>CHEGIRMA:</span>
-                            <span>-${Number(sale.discount_amount).toLocaleString()} so'm</span>
-                        </div>
-                        ` : ''}
-                        <div class="total-row main">
-                            <span>JAMI :</span>
-                            <span>${Number(sale.total_amount).toLocaleString()} so'm</span>
-                        </div>
-                        <div class="total-row" style="margin-top: 5px; font-size: 10px;">
-                            <span>TO'LOV:</span>
-                            <span style="text-transform: uppercase;">${sale.payment_method === 'cash' ? 'NAQD' : sale.payment_method === 'card' ? 'PLASTIK' : 'QARZ'}</span>
-                        </div>
-                    </div>
-
-                    <div class="footer">
-                        <p class="thank-you">XARIDINGIZ UCHUN RAHMAT!</p>
-                        <div style="margin: 10px 0;">
-                            <p>+998 90 078 08 00</p>
-                            <p>+998 88 856 13 33</p>
-                        </div>
-                        <div style="margin-top: 15px; font-size: 9px; opacity: 0.8;">
-                            <p style="font-weight: bold;">STROY CRM tizimi</p>
-                            <p>www.ardentsoft.uz</p>
-                        </div>
-                    </div>
-                </div>
-            </body>
-            </html>
-        `
-
-        const iframe = iframeRef.current
-        const doc = iframe.contentDocument || iframe.contentWindow?.document
-        if (!doc) return
-
-        doc.open()
-        doc.write(receiptHtml)
-        doc.close()
-
-        setTimeout(() => {
-            if (iframe.contentWindow) {
-                iframe.contentWindow.focus()
-                iframe.contentWindow.print()
-            }
-        }, 500)
+        try {
+            // Yaratilgan PrintJob API siga murojaat qilib orqa fondan chop etish (Thermal Printer)
+            await api.post('/print/', { sale_id: sale.id })
+            setShowReceipt(false) // Chek aynasi faqatgina muvaffaqiyatli printdan so'ng xira yopilsin
+        } catch (e) {
+            console.error("Printerga yuborishda xatolik yuz berdi", e)
+            alert("Printerga jo'natib bo'lmadi")
+        }
     }
 
     const handleCancelOrder = async (orderId: string) => {

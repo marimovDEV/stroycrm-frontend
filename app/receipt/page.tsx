@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react"
 
 export default function ReceiptPage() {
-    const [sale, setSale] = useState<any>(null)
+    const [status, setStatus] = useState<'idle' | 'printing' | 'success' | 'error'>('idle')
 
     useEffect(() => {
         try {
@@ -17,12 +17,28 @@ export default function ReceiptPage() {
         }
     }, [])
 
+    const handlePrint = async () => {
+        if (!sale) return
+        setStatus('printing')
+        try {
+            const { default: api } = await import('@/lib/api') // Lazy import
+            if (sale.id) {
+                await api.post('/print/', { sale_id: sale.id })
+            } else {
+                await api.post('/print/', sale)
+            }
+            setStatus('success')
+            setTimeout(() => window.close(), 2000)
+        } catch (error) {
+            console.error('Print failed:', error)
+            setStatus('error')
+        }
+    }
+
     useEffect(() => {
-        if (sale) {
+        if (sale && status === 'idle') {
             // Avtomatik chop etish
-            setTimeout(() => {
-                window.print()
-            }, 500)
+            handlePrint()
         }
     }, [sale])
 
@@ -48,20 +64,22 @@ export default function ReceiptPage() {
         }
       `}</style>
 
-            {/* Chop etish tugmasi — faqat ekranda ko'rinadi */}
+            {/* Chop etish statusi/tugmasi — faqat ekranda ko'rinadi */}
             <div className="no-print" style={{
                 position: 'fixed', bottom: 20, left: 0, right: 0,
                 display: 'flex', justifyContent: 'center', gap: 10, zIndex: 100
             }}>
                 <button
-                    onClick={() => window.print()}
+                    onClick={handlePrint}
+                    disabled={status === 'printing' || status === 'success'}
                     style={{
                         padding: '12px 32px', fontSize: 16, fontWeight: 'bold',
-                        background: '#1e293b', color: '#fff', border: 'none',
-                        borderRadius: 12, cursor: 'pointer'
+                        background: status === 'success' ? '#22c55e' : status === 'error' ? '#ef4444' : '#1e293b',
+                        color: '#fff', border: 'none',
+                        borderRadius: 12, cursor: status === 'printing' ? 'wait' : 'pointer'
                     }}
                 >
-                    🖨️ Chop etish
+                    {status === 'printing' ? '⏳ Yuborilmoqda...' : status === 'success' ? '✅ Chop etildi!' : status === 'error' ? '❌ Xatolik (Qayta)' : '🖨️ Chop etish'}
                 </button>
                 <button
                     onClick={() => window.close()}
