@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react"
 
 export default function ReceiptPage() {
+    const [sale, setSale] = useState<any>(null)
     const [status, setStatus] = useState<'idle' | 'printing' | 'success' | 'error'>('idle')
 
     useEffect(() => {
