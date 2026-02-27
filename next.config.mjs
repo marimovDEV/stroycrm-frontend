@@ -6,7 +6,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-
+  env: {
+    NEXT_PUBLIC_API_URL: 'https://xoztovar.api.ardentsoft.uz/api/',
+  },
 }
 
 export default nextConfig
