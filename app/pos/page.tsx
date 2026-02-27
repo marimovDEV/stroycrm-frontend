@@ -132,8 +132,11 @@ export default function POSPage() {
       setSelectedCustomerId(customer.id.toString())
       setNewCustomer({ name: "", phone: "" })
       setShowAddCustomer(false)
-    } catch (error) {
-      alert("Mijozni qo'shib bo'lmadi")
+      // Success feedback would be nice here, maybe a small toast later
+    } catch (e: any) {
+      console.error("Add customer error:", e)
+      const errorMsg = e.response?.data?.phone?.[0] || e.response?.data?.detail || "Mijozni qo'shib bo'lmadi. Ma'lumotlarni tekshiring."
+      alert(errorMsg)
     } finally {
       setAddingCustomer(false)
     }
@@ -479,11 +482,11 @@ export default function POSPage() {
                 <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Mijoz tanlash</label>
                 <Dialog open={showAddCustomer} onOpenChange={setShowAddCustomer}>
                   <DialogTrigger asChild>
-                    <button className="text-[10px] font-black text-amber-600 flex items-center gap-1 hover:text-amber-700">
-                      <UserPlus className="w-3 h-3" /> YANGI MIJOZ
+                    <button className="h-9 px-3 text-[10px] font-black text-amber-600 border border-amber-200 bg-amber-50 rounded-lg flex items-center gap-1.5 hover:bg-amber-100 transition-colors active:scale-95 shadow-sm">
+                      <UserPlus className="w-3.5 h-3.5" /> YANGI MIJOZ
                     </button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-[400px]">
+                  <DialogContent className="max-w-[95vw] sm:max-w-md rounded-2xl">
                     <DialogHeader>
                       <DialogTitle>Yangi mijoz qo'shish</DialogTitle>
                     </DialogHeader>
@@ -501,6 +504,8 @@ export default function POSPage() {
                         <Label htmlFor="phone">Telefon raqami</Label>
                         <Input
                           id="phone"
+                          type="tel"
+                          inputMode="tel"
                           placeholder="+998 90 123 45 67"
                           value={newCustomer.phone}
                           onChange={(e) => setNewCustomer(prev => ({ ...prev, phone: e.target.value }))}
