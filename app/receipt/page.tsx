@@ -96,79 +96,80 @@ export default function ReceiptPage() {
 
             {/* Chek */}
             <div style={{
-                fontFamily: "'Courier New', Courier, monospace",
+                fontFamily: "'Times New Roman', Times, serif",
                 width: '76mm', maxWidth: '100%',
-                margin: '0 auto', padding: '2mm 1mm',
-                fontSize: 11, lineHeight: 1.3, color: '#000', background: '#fff'
+                margin: '0 auto', padding: '5mm 2mm',
+                fontSize: 12, lineHeight: 1.4, color: '#000', background: '#fff'
             }}>
                 {/* Header */}
-                <div style={{ textAlign: 'center', marginBottom: 5, borderBottom: '1px dashed #000', paddingBottom: 5 }}>
-                    <div style={{ fontSize: 18, fontWeight: 900, margin: 0 }}>STROY CRM</div>
+                <div style={{ textAlign: 'center', marginBottom: 15 }}>
+                    <div style={{ fontSize: 24, fontWeight: 900, margin: 0, letterSpacing: '1px' }}>STROYCRM</div>
+                    <div style={{ fontSize: 10, textTransform: 'uppercase', marginTop: 5 }}>QURILISH MOLLARI DO'KONI</div>
                 </div>
 
                 {/* Info */}
-                <div style={{ margin: '5px 0', fontSize: 10, borderBottom: '1px dashed #000', paddingBottom: 5 }}>
-                    <p style={{ margin: '2px 0' }}>Sotuvchi: {sale.seller}</p>
-                    <p style={{ margin: '2px 0' }}>Mijoz: {sale.customer}</p>
-                    <div style={{ borderTop: '1px dashed #000', marginTop: 5, paddingTop: 5 }}>
-                        <p style={{ margin: '2px 0' }}>Sana: {sale.date}</p>
-                        <p style={{ margin: '2px 0' }}>Chek №: {sale.receipt_id}</p>
+                <div style={{ margin: '15px 0', fontSize: 12 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                        <div>SOTUVCHI: <span style={{ fontWeight: 'bold' }}>{sale.seller_name || sale.seller || 'admin'}</span></div>
+                        <div>MIJOZ: <span style={{ fontWeight: 'bold' }}>{sale.customer_name || sale.customer || 'Umumiy mijoz'}</span></div>
+                    </div>
+                    <div style={{ borderTop: '1px dotted #ccc', marginTop: 10, paddingTop: 10 }}>
+                        <div>SANA: {sale.created_at ? new Date(sale.created_at).toLocaleDateString() : sale.date}</div>
+                        <div>CHEK №: {sale.receipt_id}</div>
                     </div>
                 </div>
 
                 {/* Tovarlar */}
-                <table style={{ width: '100%', borderCollapse: 'collapse', margin: '5px 0' }}>
-                    <thead>
-                        <tr>
-                            <th style={{ textAlign: 'left', borderBottom: '1px solid #000', fontSize: 10, padding: '2px 0' }}>Tovar</th>
-                            <th style={{ textAlign: 'center', borderBottom: '1px solid #000', fontSize: 10, padding: '2px 0', width: 30 }}>Soni</th>
-                            <th style={{ textAlign: 'right', borderBottom: '1px solid #000', fontSize: 10, padding: '2px 0', width: 55 }}>Narxi</th>
-                            <th style={{ textAlign: 'right', borderBottom: '1px solid #000', fontSize: 10, padding: '2px 0', width: 65 }}>Summa</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {items.map((item: any, i: number) => (
-                            <tr key={i}>
-                                <td style={{ padding: '3px 0', fontSize: 10, borderBottom: '0.5px solid #eee', verticalAlign: 'top' }}>
-                                    {item.product_name}
-                                </td>
-                                <td style={{ padding: '3px 0', fontSize: 10, borderBottom: '0.5px solid #eee', textAlign: 'center' }}>
-                                    {parseFloat(item.quantity)}
-                                </td>
-                                <td style={{ padding: '3px 0', fontSize: 10, borderBottom: '0.5px solid #eee', textAlign: 'right' }}>
-                                    {Number(item.price).toLocaleString()}
-                                </td>
-                                <td style={{ padding: '3px 0', fontSize: 10, borderBottom: '0.5px solid #eee', textAlign: 'right' }}>
-                                    {Number(item.total).toLocaleString()}
-                                </td>
+                <div style={{ borderTop: '2px dashed #e2e8f0', marginTop: 15, paddingTop: 10 }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <thead>
+                            <tr>
+                                <th style={{ textAlign: 'left', fontSize: 11, paddingBottom: 10, fontWeight: 'bold' }}>MAHSULOT</th>
+                                <th style={{ textAlign: 'center', fontSize: 11, paddingBottom: 10, fontWeight: 'bold', width: 40 }}>SONI</th>
+                                <th style={{ textAlign: 'right', fontSize: 11, paddingBottom: 10, fontWeight: 'bold', width: 80 }}>SUMMA</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {items.map((item: any, i: number) => (
+                                <tr key={i}>
+                                    <td style={{ padding: '5px 0', fontSize: 11, verticalAlign: 'top' }}>
+                                        {item.product_name}
+                                    </td>
+                                    <td style={{ padding: '5px 0', fontSize: 11, textAlign: 'center', verticalAlign: 'top' }}>
+                                        {parseFloat(item.quantity)}
+                                    </td>
+                                    <td style={{ padding: '5px 0', fontSize: 11, textAlign: 'right', verticalAlign: 'top', fontWeight: 'bold' }}>
+                                        {Number(item.total).toLocaleString()} so'm
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
                 {/* Jami */}
-                <div style={{ borderTop: '2px solid #000', paddingTop: 5, marginTop: 5 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 900, fontSize: 14, marginTop: 5 }}>
-                        <span>JAMI:</span>
-                        <span>{Number(sale.total_amount).toLocaleString()} so'm</span>
+                <div style={{ borderTop: '2px dashed #e2e8f0', paddingBottom: 5, marginTop: 10 }}>
+                    <div style={{ borderTop: '2px solid #000', paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: 18, fontWeight: 900 }}>JAMI:</span>
+                        <span style={{ fontSize: 18, fontWeight: 900 }}>{Number(sale.total_amount).toLocaleString()} so'm</span>
                     </div>
                     {sale.notes && (
-                        <p style={{ marginTop: 10, fontSize: 10 }}>Izoh: {sale.notes}</p>
+                        <p style={{ marginTop: 10, fontSize: 11 }}>Izoh: {sale.notes}</p>
                     )}
                 </div>
 
                 {/* Footer */}
-                <div style={{ marginTop: 15, textAlign: 'center', fontSize: 10, borderTop: '1px dashed #000', paddingTop: 8, paddingBottom: 15 }}>
-                    <p style={{ margin: '2px 0', fontWeight: 'bold' }}>Xaridingiz uchun rahmat!</p>
-                    <div style={{ margin: '10px 0' }}>
-                        <p style={{ margin: '2px 0', fontWeight: 'bold' }}>Aloqa:</p>
-                        <p style={{ margin: '2px 0' }}>+998 90 078 08 00</p>
-                        <p style={{ margin: '2px 0' }}>+998 88 856 13 33</p>
+                <div style={{ marginTop: 30, textAlign: 'center', borderTop: '2px dashed #e2e8f0', paddingTop: 20 }}>
+                    <p style={{ margin: '0 0 10px 0', fontWeight: 'bold', fontStyle: 'italic', fontSize: 13 }}>Xaridingiz uchun rahmat!</p>
+                    <div style={{ margin: '15px 0' }}>
+                        <p style={{ margin: '4px 0', fontWeight: 'bold', fontSize: 12 }}>Aloqa:</p>
+                        <p style={{ margin: '4px 0', fontSize: 12 }}>+998 90 078 08 00</p>
+                        <p style={{ margin: '4px 0', fontSize: 12 }}>+998 88 856 13 33</p>
                     </div>
-                    <div style={{ marginTop: 15, fontSize: 9, borderTop: '1px dashed #000', paddingTop: 10 }}>
-                        <p style={{ margin: '2px 0', fontWeight: 'bold', fontSize: 11 }}>STROY CRM tizimi</p>
-                        <p style={{ margin: '2px 0' }}>www.ardentsoft.uz</p>
-                        <p style={{ margin: '2px 0' }}>+998 90 557 75 11</p>
+                    <div style={{ marginTop: 25, fontSize: 9, borderTop: '2px dashed #e2e8f0', paddingTop: 15, opacity: 0.8 }}>
+                        <p style={{ margin: '2px 0', fontWeight: 'bold', fontSize: 10, fontFamily: "'Courier New', Courier, monospace" }}>STROY CRM TIZIMI</p>
+                        <p style={{ margin: '2px 0', color: '#666' }}>www.ardentsoft.uz</p>
+                        <p style={{ margin: '2px 0', color: '#666' }}>+998 90 557 75 11</p>
                     </div>
                 </div>
             </div>

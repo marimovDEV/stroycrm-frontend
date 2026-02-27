@@ -274,53 +274,63 @@ export default function KassaPage() {
 
                     <div className="p-6 overflow-y-auto max-h-[70vh] flex justify-center">
                         {/* CSS-based Preview of Thermal Receipt */}
-                        <div className="bg-white shadow-xl w-[300px] p-5 font-mono text-[11px] text-black leading-tight border">
-                            <div className="text-center mb-4">
-                                <h1 className="text-2xl font-black mb-1">STROYCRM</h1>
-                                <p className="text-[9px] uppercase tracking-tighter">Qurilish mollari do'koni</p>
+                        <div className="bg-white shadow-xl w-[320px] p-6 font-serif text-black leading-snug border border-slate-200" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
+                            <div className="text-center mb-5">
+                                <h1 className="text-2xl font-black mb-1 tracking-wider">STROYCRM</h1>
+                                <p className="text-[10px] uppercase mt-1">QURILISH MOLLARI DO'KONI</p>
                             </div>
 
-                            <div className="space-y-1 mb-3 pb-2 border-b border-dashed border-slate-300">
-                                <p>SOTUVCHI: <span className="font-bold">{user?.name || user?.full_name}</span></p>
-                                <p>MIJOZ: <span className="font-bold">{receiptData?.customer_name || 'Umumiy mijoz'}</span></p>
-                                <div className="mt-2 pt-2 border-t border-dotted">
-                                    <p>SANA: {new Date().toLocaleDateString()}</p>
+                            <div className="text-xs mb-4">
+                                <div className="flex flex-col gap-1">
+                                    <p>SOTUVCHI: <span className="font-bold">{user?.name || user?.full_name || 'admin'}</span></p>
+                                    <p>MIJOZ: <span className="font-bold">{receiptData?.customer_name || 'Umumiy mijoz'}</span></p>
+                                </div>
+                                <div className="mt-3 pt-3 border-t border-dotted border-slate-400 flex flex-col gap-1">
+                                    <p>SANA: {receiptData?.created_at ? new Date(receiptData.created_at).toLocaleDateString() : new Date().toLocaleDateString()}</p>
                                     <p>CHEK №: {receiptData?.receipt_id || receiptData?.id}</p>
                                 </div>
                             </div>
 
-                            <div className="space-y-2 mb-3">
-                                <div className="flex justify-between font-bold border-b border-dashed border-slate-300 pb-1 uppercase">
-                                    <span className="w-1/2">MAHSULOT</span>
-                                    <span>SONI</span>
-                                    <span>SUMMA</span>
-                                </div>
-                                {receiptData?.items?.map((item: any, idx: number) => (
-                                    <div key={idx} className="flex justify-between text-[10px]">
-                                        <span className="w-1/2 truncate">{item.product_name}</span>
-                                        <span>{parseFloat(item.quantity)}</span>
-                                        <span className="font-bold">{Number(item.total).toLocaleString()} so'm</span>
-                                    </div>
-                                ))}
+                            <div className="mb-4 border-t-2 border-dashed border-slate-200 pt-3">
+                                <table className="w-full text-[11px]">
+                                    <thead>
+                                        <tr>
+                                            <th className="text-left font-bold pb-2">MAHSULOT</th>
+                                            <th className="text-center font-bold pb-2 w-10">SONI</th>
+                                            <th className="text-right font-bold pb-2 w-20">SUMMA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {receiptData?.items?.map((item: any, idx: number) => (
+                                            <tr key={idx}>
+                                                <td className="py-1 align-top pr-2">{item.product_name}</td>
+                                                <td className="py-1 text-center align-top">{parseFloat(item.quantity)}</td>
+                                                <td className="py-1 text-right align-top font-bold">{Number(item.total).toLocaleString()} so'm</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
 
-                            <div className="border-t border-dashed border-slate-300 pt-2 space-y-1">
-                                <div className="flex justify-between text-lg font-black pt-1 border-t-2 border-black">
+                            <div className="border-t-2 border-dashed border-slate-200 pt-2 pb-1">
+                                <div className="flex justify-between items-center text-lg font-black pt-2 border-t-2 border-black">
                                     <span>JAMI:</span>
                                     <span>{Number(receiptData?.total_amount).toLocaleString()} so'm</span>
                                 </div>
                             </div>
 
-                            <div className="mt-6 text-center space-y-1 border-t border-dashed border-slate-300 pt-3">
-                                <p className="font-bold italic text-xs mb-2">Xaridingiz uchun rahmat!</p>
-                                <p className="font-bold mb-1">Aloqa:</p>
-                                <p>+998 90 078 08 00</p>
-                                <p>+998 88 856 13 33</p>
+                            <div className="mt-8 text-center border-t-2 border-dashed border-slate-200 pt-5">
+                                <p className="font-bold italic text-base mb-3 text-[13px]">Xaridingiz uchun rahmat!</p>
+                                <div className="mb-4">
+                                    <p className="font-bold text-[12px] mb-1">Aloqa:</p>
+                                    <p className="text-[12px] my-0.5">+998 90 078 08 00</p>
+                                    <p className="text-[12px] my-0.5">+998 88 856 13 33</p>
+                                </div>
 
-                                <div className="mt-4 pt-4 border-t border-dashed border-slate-200 flex flex-col items-center gap-0.5 opacity-80">
-                                    <p className="text-[9px] font-black uppercase tracking-tighter">STROY CRM tizimi</p>
-                                    <p className="text-[8px]">www.ardentsoft.uz</p>
-                                    <p className="text-[8px]">+998 90 557 75 11</p>
+                                <div className="mt-6 pt-4 border-t-2 border-dashed border-slate-200 flex flex-col items-center gap-1 opacity-80">
+                                    <p className="text-[10px] font-bold font-mono">STROY CRM TIZIMI</p>
+                                    <p className="text-[9px] text-slate-600">www.ardentsoft.uz</p>
+                                    <p className="text-[9px] text-slate-600">+998 90 557 75 11</p>
                                 </div>
                             </div>
                         </div>
