@@ -1,6 +1,7 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   LineChart,
@@ -21,11 +22,23 @@ import { useAuth } from "@/hooks/use-auth"
 import { useProducts } from "@/hooks/use-products"
 import { useDashboard } from "@/hooks/use-dashboard"
 import { RoleGate } from "@/components/role-gate"
-
 export default function DashboardPage() {
+
   const { user } = useAuth()
+  const router = useRouter()
   const { products, loading: productsLoading } = useProducts()
   const { stats: dashboardStats, loading: dashboardLoading } = useDashboard()
+
+  // Safeguard: Redirect unauthorized roles
+  useEffect(() => {
+    if (user) {
+      if (['seller', 'sotuvchi', 'kassir'].includes(user.role)) {
+        router.push("/pos")
+      } else if (user.role === 'omborchi') {
+        router.push("/inventory")
+      }
+    }
+  }, [user, router])
 
   const COLORS = ["#475569", "#f59e0b", "#ef4444", "#10b981", "#8b5cf6", "#06b6d4"]
 

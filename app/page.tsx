@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils"
 
 export default function LoginPage() {
   const router = useRouter()
-  const { login, isAuthenticated } = useAuth()
+  const { login, isAuthenticated, user } = useAuth()
   const [pin, setPin] = useState("")
   const [error, setError] = useState(false)
   const [isOnline, setIsOnline] = useState(true)
@@ -26,10 +26,16 @@ export default function LoginPage() {
 
   // Redirect if authenticated
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/dashboard")
+    if (isAuthenticated && user) {
+      if (['seller', 'sotuvchi', 'kassir'].includes(user.role)) {
+        router.push("/pos")
+      } else if (user.role === 'omborchi') {
+        router.push("/inventory")
+      } else {
+        router.push("/dashboard")
+      }
     }
-  }, [isAuthenticated, router])
+  }, [isAuthenticated, user, router])
 
   // Monitor online status
   useEffect(() => {
@@ -51,7 +57,10 @@ export default function LoginPage() {
     try {
       const success = await login({ pin: currentPin })
       if (success) {
-        window.location.href = "/dashboard"
+        // We use window.location.href to force a full reload and clear any state
+        // but it's handled by useAuth in useEffect above as well.
+        // For immediate feedback:
+        window.location.reload()
       } else {
         setError(true)
         setPin("")
