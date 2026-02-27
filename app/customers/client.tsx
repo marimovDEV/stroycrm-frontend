@@ -149,7 +149,7 @@ export function CustomersClient() {
             <CardTitle className="text-sm font-medium">Jami Daromad</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${(totalRevenue / 1000).toFixed(0)}K</div>
+            <div className="text-2xl font-bold">{totalRevenue.toLocaleString()}</div>
           </CardContent>
         </Card>
         <Card>
@@ -157,7 +157,7 @@ export function CustomersClient() {
             <CardTitle className="text-sm font-medium">O'rtacha Buyurtma Qiymati</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${avgOrderValue.toFixed(0)}</div>
+            <div className="text-2xl font-bold">{avgOrderValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
           </CardContent>
         </Card>
         <Card>

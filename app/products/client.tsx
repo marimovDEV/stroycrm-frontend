@@ -321,7 +321,7 @@ export function ProductsClient() {
             </div>
             <div className="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 flex flex-col justify-center">
               <p className="text-[8px] md:text-sm font-bold text-slate-400 uppercase tracking-wider leading-none">Zaxira qiymati</p>
-              <p className="text-base md:text-2xl font-black text-slate-900 mt-1">{(stats.totalValue / 1000000).toFixed(1)}M</p>
+              <p className="text-base md:text-2xl font-black text-slate-900 mt-1">{stats.totalValue.toLocaleString()}</p>
             </div>
             <div className="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 flex flex-col justify-center">
               <p className="text-[8px] md:text-sm font-bold text-slate-400 uppercase tracking-wider leading-none">Kam zaxira</p>
