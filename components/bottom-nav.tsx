@@ -1,16 +1,24 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { ShoppingCart, Warehouse, BarChart3, Package, BookOpen } from "lucide-react"
+import { useRouter, usePathname } from "next/navigation"
+import { ShoppingCart, Warehouse, BarChart3, Package, BookOpen, LogOut } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/use-auth"
 
 export function BottomNav() {
     const pathname = usePathname()
-    const { user } = useAuth()
+    const router = useRouter()
+    const { user, logout } = useAuth()
 
     if (!user) return null
+
+    const handleLogout = () => {
+        if (confirm("Tizimdan chiqmoqchimisiz?")) {
+            logout()
+            router.push("/")
+        }
+    }
 
     // Seller uchun: Savdo, Mahsulotlar, Qarzlar
     // Boshqalar uchun: Savdo, Ombor, Hisobot/Qarzlar
@@ -39,7 +47,7 @@ export function BottomNav() {
 
     return (
         <div className="md:hidden fixed bottom-1 left-0 right-0 z-[60] px-4 pb-4">
-            <nav className="bg-slate-800/95 backdrop-blur-md border border-slate-700/50 flex justify-around items-center h-16 rounded-2xl shadow-2xl overflow-hidden">
+            <nav className="bg-slate-800/95 backdrop-blur-md border border-slate-700/50 flex justify-around items-center h-16 rounded-2xl shadow-2xl overflow-hidden px-2">
                 {filteredItems.map((item) => {
                     const isActive = pathname === item.href
                     const Icon = item.icon
@@ -53,13 +61,23 @@ export function BottomNav() {
                                 isActive ? "text-amber-500" : "text-slate-400"
                             )}
                         >
-                            <Icon className={cn("w-6 h-6", isActive && "animate-in zoom-in duration-300")} />
+                            <Icon className={cn("w-5 h-5", isActive && "animate-in zoom-in duration-300")} />
                             <span className="text-[10px] font-black uppercase tracking-tighter">
                                 {item.label}
                             </span>
                         </Link>
                     )
                 })}
+
+                <button
+                    onClick={handleLogout}
+                    className="flex flex-col items-center justify-center flex-1 h-full gap-1 text-slate-400 transition-all active:scale-90"
+                >
+                    <LogOut className="w-5 h-5" />
+                    <span className="text-[10px] font-black uppercase tracking-tighter">
+                        Chiqish
+                    </span>
+                </button>
             </nav>
         </div>
     )
