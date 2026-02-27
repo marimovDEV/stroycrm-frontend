@@ -99,6 +99,7 @@ export default function POSPage() {
           setLastSale(order)
           setShowSuccess(true)
           setSelectedCustomerId("")
+          refreshProducts()
           // No auto-print for seller (usually)
         } else {
           // Admin/Cashier confirms immediately
